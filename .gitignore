@@ -1,0 +1,27 @@
+# Signing keys: never publish. Without them the installed apps can't be updated.
+*.jks
+*.keystore
+keystore.pass
+
+# Build outputs and libraries that build.sh downloads
+build/
+kick-tv/libs/
+*.idsig
+
+# APKs: download third-party ones from upstream (apks/README.md);
+# our own builds are attached to GitHub Releases.
+apks/*.apk
+
+# Backups of this TV's apps (proprietary) and settings
+backup/*
+!backup/restore.sh
+
+# Device-specific data (serial numbers, MAC addresses, local network)
+info/*
+!info/packages-before-2026-10-31.txt
+
+# Local agent instructions
+agents.md
+AGENTS.md
+
+.DS_Store

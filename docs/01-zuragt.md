@@ -1,0 +1,71 @@
+# 1. Зурагтын мэдээлэл ба судалгаа
+
+## Техникийн үзүүлэлт
+
+2026-10-31-нд ADB-ээр уншсан мэдээлэл.
+
+| Үзүүлэлт | Утга |
+|---|---|
+| Загвар | `MiTV4-ANSM0`, codename `xmen`, platform 666 (`txl_xmen_t46k`). Mi TV 4 цувралын Amlogic хувилбаруудад нийтлэг нэр |
+| Дэлгэц | CSOT 55", 3840×2160. UI нь 1920×1080, density 320 (≈960×540dp) |
+| Chip | Amlogic T962 (TXL), 4× Cortex-A53. Kernel 64-bit, харин app-ууд **зөвхөн 32-bit** (armeabi-v7a) |
+| GPU | OpenGL ES 2.0 |
+| RAM | 2GB (системд 1.6GB) |
+| eMMC | 8GB: system 1GB (**86MB сул**), data 5.8GB |
+| Android | 6.0.1 (API 23), security patch 2017-04-01, kernel 3.14.29 |
+| Firmware | MiTV OS 1.3.128, build 22.4.15.3235 (2022-04-15), `user/release-keys`. Root байхгүй, SELinux enforcing |
+| Tuner | si2151 (Хятадын DTMB) |
+| DRM | Widevine идэвхгүй (`media.amplayer.widevineenable=false`) |
+| Нээлттэй port | 6087, 6088, 6091, 6093, 6095 (Mi TV Assistant), 9093, 9095, 49152 (DLNA). ADB асаалттай үед 5555 |
+| Root CA | 158 ширхэг. **ISRG Root X1 (Let's Encrypt), Sectigo R46, GTS Root R1 байхгүй** |
+
+Бүх getprop: `info/getprop-2026-10-31.txt` (serial дугаар, MAC хаяг агуулдаг тул repo-д ороогүй).
+Өөрчлөлт хийхээс өмнөх package жагсаалт: [`info/packages-before-2026-10-31.txt`](../info/packages-before-2026-10-31.txt).
+
+Сүүлийн мөрөнд дурдсан root-ууд байхгүй нь чухал. Шинэ сайтуудын ихэнх нь эдгээр root-ыг
+ашигладаг тул app бүр өөрөө root certificate-аа агуулаагүй бол HTTPS холболт амжилтгүй болно.
+Энэ нь Breezy-ийн NAMEM болон YoWindow-д нөлөөлсөн ([docs/06](06-tsag-agaar.md)).
+
+### Root CA-г шинэчилж болох уу? Үгүй (2026-10-31-нд шалгасан)
+
+| Арга | Яагаад болохгүй |
+|---|---|
+| System CA store (`/system/etc/security/cacerts`) засах | Root эрх шаардлагатай |
+| User CA болгон нэмэх (Android 6 дээр бүх app user CA-д итгэдэг) | Xiaomi энэ firmware-ээс user CA бичдэг **`com.android.keychain`** service болон AOSP Settings-ийн `CredentialStorage`-ийг хассан. CertInstaller байгаа ч эцсийн алхмаа дамжуулах газаргүй |
+| Device owner app + `DevicePolicyManager.installCaCert()` | Энэ ч мөн KeyChain-ээр дамждаг. Мөн account (Xiaomi, Aerial) бүртгэлтэй үед ADB-ээр device owner тохируулах боломжгүй. KeyChain байхгүй үед system_server унах эрсдэлтэй тул туршаагүй |
+| Дэлгэцийн PIN тавиад CertInstaller ашиглах | PIN тохируулах цэс байхгүй. Тавьсан ч KeyChain байхгүй |
+
+Тиймээс шинэ root шаардлагатай сайттай холбогддог app бүр root-оо өөртөө агуулах ёстой.
+"Цаг агаар" app ISRG X1/X2-ийг ингэж агуулдаг. Бусдын app-уудыг (жишээ нь Breezy-ийн NAMEM)
+засах боломжгүй. Орчин үеийн TLS шаарддаг app-уудыг Mi Box S дээр ашигла.
+
+## Android TV + Google Play болгох боломжтой юу? Үгүй
+
+- **Тохирох firmware байхгүй.** Xiaomi Хятадад зарсан зурагтдаа Google-ийн гэрчилгээтэй
+  Android TV firmware гаргадаггүй. Global/India хувилбарууд өөр board, chip-тэй.
+- **Өөр firmware суулгах зам хаалттай.** Firmware нь Xiaomi-ийн signature-тэй (`release-keys`),
+  efuse-д secure boot key-ийн хэсэг бий, root байхгүй. Хүчээр (USB burning tool) flash хийвэл
+  зурагт эвдрэх эрсдэл маш өндөр.
+- **Google-ийн app-д зай байхгүй.** System хэсэгт ердөө 86MB сул тул root авсан ч Google Play
+  Services-ийг system app болгох боломжгүй.
+- **Хуучирсан платформ.** Android 6, 32-bit, Widevine идэвхгүй тул Netflix гэх мэт HD streaming
+  ажиллахгүй. Олон шинэ app Android 7–8+ шаарддаг.
+- **Play Store-ийг энгийн app болгох нь тогтворгүй.** Google төхөөрөмжийг "uncertified" гэж хаадаг
+  тул зөвлөхгүй.
+
+## Зөвлөмж: Android TV-д Mi Box S-ийг ашигла
+
+HDMI-д залгаатай Mi Box S нь Android TV 9, Google Play, Netflix-ийн албан ёсны дэмжлэгтэй.
+
+- Зурагтын тохиргоонд "Power-on input / 开机信号源" байвал HDMI болго. Ингэвэл зурагт асахдаа
+  шууд Mi Box руу орно.
+- HDMI-CEC ("HDMI 控制")-ийг асаавал Mi Box-ийн remote-оор зурагтаа асааж, унтрааж, дууг
+  тохируулна.
+- Aerial дээр HDMI оролтыг "Mi Box" нэрээр pin хийж болно ([docs/03](03-aerial.md)).
+
+## ADB-гүйгээр авсан анхны мэдээлэл
+
+- `http://<TV-IP>:6095/request?action=isalive`: төхөөрөмжийн нэр, platform 666, build 3235.
+  Зурагтын "Phone can control TV" (Mi TV Assistant) service.
+- `http://<TV-IP>:49152/description.xml`: UPnP/DLNA (Xiaomi hyperDLNA).
+- mDNS: зурагт AirPlay (`_airplay`) зарладаг. Mi Box S нь `_googlecast` болон `_androidtvremote2`.
