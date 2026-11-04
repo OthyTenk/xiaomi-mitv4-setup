@@ -32,7 +32,7 @@ Both apps have a Mongolian interface.
 
 Other China-market Mi TVs with Android 6 and PatchWall are probably similar, but only this one has
 been tested. Check `adb shell pm list packages` against the lists in
-[docs/05](docs/05-app-ustgalt.md) before you remove anything.
+[docs/05](docs/05-app-removal.md) before you remove anything.
 
 ## ⚠️ Read this first
 
@@ -40,11 +40,11 @@ been tested. Check `adb shell pm list packages` against the lists in
    and keeps rebooting on the Mi logo. If that happens, unplug the cable, unplug the power for
    1 minute, and turn it back on.
 2. **Don't flash another firmware (Android TV, Global ROM).** No firmware fits this board, so you
-   will brick the TV. [docs/01](docs/01-zuragt.md) explains why.
+   will brick the TV. [docs/01](docs/01-tv.md) explains why.
 3. **Use ADB over Wi‑Fi only.** Xiaomi turns ADB debugging off on every standby and reboot. Turn
    it on when you need it, and off again when you're done.
 4. **Only remove the apps on the list.** Removing the HDMI player, settings, remote or keyboard
-   packages breaks the TV. The do-not-touch list is in [docs/05](docs/05-app-ustgalt.md).
+   packages breaks the TV. The do-not-touch list is in [docs/05](docs/05-app-removal.md).
 5. **Keep your signing keys.** The first build of each app creates `keystore.jks` and
    `keystore.pass`. Without them you can't update the installed app, only uninstall and reinstall
    it. Never commit them (`.gitignore` already excludes them).
@@ -97,17 +97,15 @@ firmware: PatchWall can't be disabled, so Aerial's Home Guard brings Aerial back
 
 ## Docs
 
-The detailed docs are in Mongolian; a browser's translate feature handles them well.
-
 | # | Topic | Doc |
 |---|---|---|
-| 1 | TV specs; why Android TV / Google Play can't be installed; why the root CAs can't be updated | [docs/01](docs/01-zuragt.md) |
+| 1 | TV specs; why Android TV / Google Play can't be installed; why the root CAs can't be updated | [docs/01](docs/01-tv.md) |
 | 2 | ADB over Wi‑Fi, common errors, useful commands | [docs/02](docs/02-adb.md) |
 | 3 | Aerial and Home Guard on Android 6 (no `cmd` command) | [docs/03](docs/03-aerial.md) |
 | 4 | SmartTube | [docs/04](docs/04-smarttube.md) |
-| 5 | Which apps were removed, which must stay, how to restore them | [docs/05](docs/05-app-ustgalt.md) |
-| 6 | Weather app: data, NowCast AQI, bundled Let's Encrypt roots, another city | [docs/06](docs/06-tsag-agaar.md) |
-| 7 | Troubleshooting: boot loop, ADB, HOME, child lock, voice button | [docs/07](docs/07-asuudal-shiidel.md) |
+| 5 | Which apps were removed, which must stay, how to restore them | [docs/05](docs/05-app-removal.md) |
+| 6 | Weather app: data, NowCast AQI, bundled Let's Encrypt roots, another city | [docs/06](docs/06-weather.md) |
+| 7 | Troubleshooting: boot loop, ADB, HOME, child lock, voice button | [docs/07](docs/07-troubleshooting.md) |
 | 8 | Kick app: why it exists, controls, how it uses Kick's API, build | [docs/08](docs/08-kick.md) |
 
 ## Building the apps
@@ -126,7 +124,7 @@ python3 art.py                         # redraw icon and banner (needs Pillow)
   the APK from Releases, so uninstall that one first.
 - **Weather for another city:** change `COORDS` and the time zone in
   `tsag-agaar-tv/src/mn/home/tsagagaar/MainActivity.java`, and the city name in
-  `res/layout/main.xml` ([docs/06](docs/06-tsag-agaar.md)).
+  `res/layout/main.xml` ([docs/06](docs/06-weather.md)).
 - **Kick** uses the same web endpoints kick.com itself calls, with no login. If Kick changes them,
   the lists stop loading; fix `kick-tv/src/mn/home/kick/Kick.java`. Streams Kick marks 18+ are
   hidden in the Mongolian and All tabs (`HIDE_MATURE` in `MainActivity.java`).
@@ -134,7 +132,7 @@ python3 art.py                         # redraw icon and banner (needs Pillow)
 ## Repository layout
 
 ```
-├── docs/            detailed guides 01–08 (Mongolian)
+├── docs/            detailed guides 01–08, English (`.md`) and Mongolian (`.mn.md`)
 ├── scripts/         setup and maintenance scripts
 ├── apks/            where downloaded APKs go, with SHA256SUMS.txt
 ├── backup/          restore.sh; remove-chinese-apps.sh saves APK backups here

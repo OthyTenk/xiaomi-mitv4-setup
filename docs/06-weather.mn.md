@@ -1,5 +1,7 @@
 # 6. Цаг агаар
 
+[English](06-weather.md) · **Монгол**
+
 ## Breezy Weather (туршаад устгасан)
 
 - Breezy Weather 6.2.2 (open source, GitHub). Улаанбаатарт **NAMEM** (Цаг уур, орчны шинжилгээний
@@ -8,7 +10,7 @@
   Breezy ч зөвхөн Let's Encrypt-ийн root-уудыг (ISRG X1/X2) өөртөө агуулдаг.
 - Open-Meteo руу шилжүүлэхэд ажилласан. Гэхдээ утсанд зориулсан layout учир TV дээр 7 хоногийн
   мэдээний доод хэсэг дэлгэцнээс хальсан тул устгасан.
-- APK хадгалагдсан: [`apks/breezy-weather-armeabi-v7a-v6.2.2_standard.apk`](../apks/).
+- APK: `apks/breezy-weather-armeabi-v7a-v6.2.2_standard.apk` ([хаанаас татах](../apks/README.md#монгол)).
   Суулгах бол `./scripts/install-apps.sh --breezy`.
 
 **YoWindow TV**-г бас судалсан. TV-д зориулсан, Android 6+ дэмждэг. Гэхдээ APK нь зөвхөн RuStore дээр

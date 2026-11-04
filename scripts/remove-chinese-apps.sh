@@ -3,7 +3,7 @@
 #   ./remove-chinese-apps.sh
 # Устгахаас өмнө /data/app дахь APK-г ../backup/apk руу хадгална. Буцаах: ../backup/restore.sh
 # Энэ firmware `pm disable-user`, `pm hide`-ийг хориглодог тул system app-ыг `pm uninstall -k --user 0`-оор нууна.
-# АНХААР: жагсаалтад өөр app бүү нэм. Хөндөж болохгүй app-ууд: docs/05-app-ustgalt.md
+# АНХААР: жагсаалтад өөр app бүү нэм. Хөндөж болохгүй app-ууд: docs/05-app-removal.mn.md
 set -u
 cd "${0:A:h}"
 export ANDROID_SERIAL="${TV:-192.168.1.13}:5555"

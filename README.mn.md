@@ -29,18 +29,18 @@ firmware солих шаардлагагүй. Бүгдийг Mac-аас Wi‑Fi 
 
 Android 6, PatchWall-тэй бусад Хятад Mi TV-үүд ойролцоо байх магадлалтай ч зөвхөн энэ загвар дээр
 туршсан. Юм устгахаасаа өмнө `adb shell pm list packages`-ийн гаралтыг
-[docs/05](docs/05-app-ustgalt.md)-ийн жагсаалтуудтай тулгаж шалгаарай.
+[docs/05](docs/05-app-removal.mn.md)-ийн жагсаалтуудтай тулгаж шалгаарай.
 
 ## ⚠️ Хамгийн чухал анхааруулгууд
 
 1. **Зурагтыг компьютертэй USB кабелиар бүү холбо.** Зурагт Mi logo дээр гацаж, асаж унтраад
    давтдаг (USB flash горимд ордог). Холбогдсон бол кабелийг салгаад цахилгаанаас 1 минут салга.
 2. **Өөр firmware (Android TV, Global ROM) бүү flash хий.** Энэ загварт тохирох firmware байхгүй,
-   зурагт бүр мөсөн эвдэрнэ (brick). Шалтгааныг [docs/01](docs/01-zuragt.md)-д тайлбарласан.
+   зурагт бүр мөсөн эвдэрнэ (brick). Шалтгааныг [docs/01](docs/01-tv.mn.md)-д тайлбарласан.
 3. **ADB-г зөвхөн Wi‑Fi-аар ашигла.** Зурагт standby болон дахин асах бүрт ADB-г өөрөө унтраадаг.
    Хэрэгтэй үедээ асаа, ажлаа дуусгаад унтраа.
 4. **Хятад app-уудаас зөвхөн жагсаалтад байгааг устга.** HDMI тоглуулагч, тохиргоо, remote,
-   keyboard зэргийг устгавал зурагт ажиллахгүй болно ([docs/05](docs/05-app-ustgalt.md)).
+   keyboard зэргийг устгавал зурагт ажиллахгүй болно ([docs/05](docs/05-app-removal.mn.md)).
 5. **Signing key-ээ хадгал.** App бүрийг анх build хийхэд `keystore.jks`, `keystore.pass` үүснэ.
    Эдгээргүйгээр суусан app-ыг шинэчилж чадахгүй, устгаж байж л дахин суулгана. Git-д бүү оруул
    (`.gitignore` аль хэдийн хасдаг).
@@ -93,14 +93,14 @@ HOME дарахад PatchWall 1–3 секунд гараад Aerial руу бу
 
 | # | Сэдэв | Заавар |
 |---|---|---|
-| 1 | Зурагтын үзүүлэлт; Android TV + Google Play яагаад болохгүй; root CA-г яагаад шинэчилж болохгүй | [docs/01](docs/01-zuragt.md) |
-| 2 | Wi‑Fi ADB, түгээмэл алдаа, хэрэгтэй командууд | [docs/02](docs/02-adb.md) |
-| 3 | Android 6 дээрх Aerial ба Home Guard (`cmd` команд байхгүй) | [docs/03](docs/03-aerial.md) |
-| 4 | SmartTube | [docs/04](docs/04-smarttube.md) |
-| 5 | Юуг устгасан, юуг хөндөж болохгүй, хэрхэн буцаах | [docs/05](docs/05-app-ustgalt.md) |
-| 6 | "Цаг агаар": мэдээлэл, NowCast AQI, Let's Encrypt root, өөр хот болгох | [docs/06](docs/06-tsag-agaar.md) |
-| 7 | Асуудал шийдэх: Mi logo гацалт, ADB, HOME, түгжээ, дуу хоолойн товч | [docs/07](docs/07-asuudal-shiidel.md) |
-| 8 | Kick: яагаад өөрсдөө хийсэн, удирдлага, Kick API, build | [docs/08](docs/08-kick.md) |
+| 1 | Зурагтын үзүүлэлт; Android TV + Google Play яагаад болохгүй; root CA-г яагаад шинэчилж болохгүй | [docs/01](docs/01-tv.mn.md) |
+| 2 | Wi‑Fi ADB, түгээмэл алдаа, хэрэгтэй командууд | [docs/02](docs/02-adb.mn.md) |
+| 3 | Android 6 дээрх Aerial ба Home Guard (`cmd` команд байхгүй) | [docs/03](docs/03-aerial.mn.md) |
+| 4 | SmartTube | [docs/04](docs/04-smarttube.mn.md) |
+| 5 | Юуг устгасан, юуг хөндөж болохгүй, хэрхэн буцаах | [docs/05](docs/05-app-removal.mn.md) |
+| 6 | "Цаг агаар": мэдээлэл, NowCast AQI, Let's Encrypt root, өөр хот болгох | [docs/06](docs/06-weather.mn.md) |
+| 7 | Асуудал шийдэх: Mi logo гацалт, ADB, HOME, түгжээ, дуу хоолойн товч | [docs/07](docs/07-troubleshooting.mn.md) |
+| 8 | Kick: яагаад өөрсдөө хийсэн, удирдлага, Kick API, build | [docs/08](docs/08-kick.mn.md) |
 
 ## App-уудыг build хийх
 
@@ -117,7 +117,7 @@ python3 art.py                         # icon, banner-ийг дахин зурн
 - Анхны build таны өөрийн signing key-г үүсгэнэ. Өөрийн key-гээр sign хийсэн build нь Releases-ийн
   APK-ын дээр суухгүй, тиймээс эхлээд түүнийг устгана.
 - **Өөр хотын цаг агаар:** `tsag-agaar-tv/src/mn/home/tsagagaar/MainActivity.java` дахь `COORDS`,
-  цагийн бүс, мөн `res/layout/main.xml` дахь хотын нэрийг солино ([docs/06](docs/06-tsag-agaar.md)).
+  цагийн бүс, мөн `res/layout/main.xml` дахь хотын нэрийг солино ([docs/06](docs/06-weather.mn.md)).
 - **Kick** нь kick.com сайтын өөрийн дууддаг вебийн API-г нэвтрэхгүйгээр ашигладаг. Kick үүнийгээ
   өөрчилбөл жагсаалт ачаалагдахаа болино, тэгвэл `kick-tv/src/mn/home/kick/Kick.java`-г засна.
   Kick-ийн 18+ гэж тэмдэглэсэн дамжуулалтууд Монгол, Бүх улс табд харагдахгүй (`MainActivity.java`
@@ -126,7 +126,7 @@ python3 art.py                         # icon, banner-ийг дахин зурн
 ## Хавтасны бүтэц
 
 ```
-├── docs/            дэлгэрэнгүй заавар (01–08)
+├── docs/            дэлгэрэнгүй заавар (01–08), англи (`.md`) ба монгол (`.mn.md`)
 ├── scripts/         суулгах, засварлах script-үүд
 ├── apks/            татсан APK-ууд энд орно, SHA256SUMS.txt
 ├── backup/          restore.sh; remove-chinese-apps.sh APK backup-уудыг энд хадгална

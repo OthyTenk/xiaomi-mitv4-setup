@@ -1,5 +1,7 @@
 # 5. Хятад app-ууд: юуг устгасан, юуг үлдээсэн
 
+[English](05-app-removal.md) · **Монгол**
+
 ## Арга
 
 Энэ firmware `pm disable-user` болон `pm hide`-ийг хориглодог (Permission Denial). Тиймээс:
@@ -19,8 +21,8 @@ cd backup
 ./restore.sh                             # бүгдийг буцаах
 ```
 
-Устгахаас өмнө `/data/app` дахь APK бүрийг [`backup/apk/`](../backup/apk/) хавтаст хадгалсан (243MB).
-Устгалын лог: [`backup/removal-log.txt`](../backup/removal-log.txt). Өмнөх төлөв:
+Устгахаас өмнө `/data/app` дахь APK бүрийг `backup/apk/` хавтаст хадгалсан (243MB, repo-д ороогүй).
+Устгалын лог: `backup/removal-log.txt`. Өмнөх төлөв:
 `backup/packages-before.txt`, `backup/settings-before.txt`.
 
 ## Устгасан 24 app

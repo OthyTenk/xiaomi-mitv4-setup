@@ -1,67 +1,71 @@
-# 3. Aerial launcher (PatchWall-ийн оронд)
+# 3. Aerial launcher (instead of PatchWall)
 
-## Яагаад Aerial вэ
+**English** · [Монгол](03-aerial.mn.md)
 
-- Энэ firmware PatchWall-ийг (`com.mitv.tvhome`) унтраах, нуухыг хориглодог (`pm disable-user`,
-  `pm hide` → Permission denied). PatchWall HOME товчийг өндөр priority-тойгоор (100) үргэлж
-  өөртөө авдаг. Тиймээс FLauncher, ATV Launcher гэх мэт энгийн launcher default болж чадахгүй.
-- [Aerial](https://github.com/pengchujin/aerial-tv) нь Хятадын зурагтад зориулагдсан (MIT license,
-  ~8k star). Түүний **Home Guard** accessibility service HOME дарахад PatchWall-ийг таньж, Aerial-ийг
-  урд нь гаргадаг. Mi TV 4 цувралын Android 6 дээр ажилладаг гэж тэмдэглэгдсэн.
+## Why Aerial
 
-## Суулгасан хувилбар
+- This firmware doesn't allow disabling or hiding PatchWall (`com.mitv.tvhome`): `pm disable-user`
+  and `pm hide` return Permission denied. PatchWall always claims the HOME key with a high priority
+  (100), so ordinary launchers like FLauncher or ATV Launcher can't become the default.
+- [Aerial](https://github.com/pengchujin/aerial-tv) is made for Chinese TVs (MIT license, ~8k stars).
+  Its **Home Guard** accessibility service notices PatchWall when HOME is pressed and brings Aerial
+  back to the front. It's listed as working on the Android 6 Mi TV 4 series.
+
+## Installed version
 
 | | |
 |---|---|
-| Хувилбар | 1.75 (2026-10-31), package `app.orchard.tv` |
-| APK | [`apks/aerial-standard-1.75.apk`](../apks/aerial-standard-1.75.apk) |
+| Version | 1.75 (2026-10-31), package `app.orchard.tv` |
+| APK | `apks/aerial-standard-1.75.apk` ([where to get it](../apks/README.md)) |
 | SHA-256 | `9fa0e909052895d945791bbc9c34320bb79f59f77ea4012ac096e78db74a48e2` |
-| Signature | **"Android Debug"** key (SHA-256 `e08962dc…6685`). Release key биш, community app |
+| Signature | **"Android Debug"** key (SHA-256 `e08962dc…6685`). Not a release key: it's a community app |
 
-## Суулгах ба дахин тохируулах
+## Install and repair
 
 ```sh
-./scripts/aerial-setup.sh            # суулгах + эрх олгох + Home Guard асаах
-./scripts/aerial-setup.sh repair     # HOME PatchWall дээр гацаад Aerial гарахгүй бол
+./scripts/aerial-setup.sh            # install + grant permissions + turn on Home Guard
+./scripts/aerial-setup.sh repair     # HOME stays on PatchWall and Aerial doesn't appear
 ```
 
-Android 6-д `cmd` команд байхгүй тул script эдгээрийг гараар хийдэг:
+Android 6 has no `cmd` command, so the script sets these by hand:
 
-| Тохиргоо | Яагаад |
+| Setting | Why |
 |---|---|
-| `pm grant … WRITE_SECURE_SETTINGS` | Home Guard унтарвал Aerial өөрөө дахин асаана |
-| `appops SYSTEM_ALERT_WINDOW / WRITE_SETTINGS / GET_USAGE_STATS = allow` | Асах үед нээгдэх, гэрэлтүүлэг тохируулах, урд байгаа app-ыг мэдэх (Xiaomi Android 6 дээр PatchWall accessibility event илгээдэггүй) |
-| `enabled_notification_listeners = …RevivalListener` | Xiaomi standby-д Aerial-ийг хаавал буцааж сэргээнэ |
+| `pm grant … WRITE_SECURE_SETTINGS` | Aerial turns Home Guard back on by itself if it gets disabled |
+| `appops SYSTEM_ALERT_WINDOW / WRITE_SETTINGS / GET_USAGE_STATS = allow` | Open at boot, set the brightness, know which app is in front (on Xiaomi's Android 6, PatchWall sends no accessibility events) |
+| `enabled_notification_listeners = …RevivalListener` | Revives Aerial when Xiaomi kills it in standby |
 | `enabled_accessibility_services = …HomeGuardService`, `accessibility_enabled = 1` | Home Guard |
 
-⚠️ Aerial-ийн албан ёсны `curl … | bash` installer-ийг ашиглаагүй. Учир нь тэр installer Android 6-д
-байхгүй `cmd` командуудыг ашигладаг, мөн интернетээс script татаж шууд ажиллуулах нь эрсдэлтэй.
-⚠️ Энэ тохиргоо өмнө асаалттай байсан бусад accessibility service-ийг (караоке, 小爱) солино.
-Тэдгээр app-ууд устгагдсан тул энэ нь асуудал үүсгэхгүй.
+⚠️ Aerial's official `curl … | bash` installer wasn't used. It relies on `cmd` commands that
+Android 6 doesn't have, and running a script straight from the internet is risky.
+⚠️ This setup replaces any accessibility services that were on before (karaoke, 小爱). Those apps
+were removed, so here it causes no problem.
 
-## Хэрэглээ
+## Using it
 
-- HOME дарахад PatchWall **1–3 секунд** гараад Aerial руу буцна. Энэ firmware дээр хэвийн.
-- Aerial-ийн app жагсаалтаас SmartTube болон "Цаг агаар"-ыг нүүр дэлгэцэнд pin хий.
-- **Mi Box S:** HDMI оролтыг pin хийгээд нэр, icon-ыг нь өгнө. Энэ firmware-ийн (22.4) HDMI
-  дугаарлалт: HDMI1=23, HDMI2=24, HDMI3=25, AV=2. Эдгээр нь
-  `com.xiaomi.mitv.tvplayer/.ExternalSourceActivity` activity-ийн int extra `input`-ийн утгууд.
-- Aerial нүүр дэлгэцэд цаг агаар харуулдаг. Хотыг IP хаягаар тодорхойлдог тул буруу хот
-  харагдвал wallpaper цэс дэх QR кодыг утсаараа уншуулж "Ulaanbaatar" гэж тохируулна.
-- **Шинэчлэх:** шинэ APK-г [GitHub release](https://github.com/pengchujin/aerial-tv/releases)-ээс
-  татаад `APK=<файл> ./scripts/aerial-setup.sh` ажиллуулна.
+- When you press HOME, PatchWall shows for **1–3 seconds** and then Aerial comes back. That's
+  normal on this firmware.
+- Pin SmartTube and Weather to the home screen from Aerial's app list.
+- **Mi Box S:** pin the HDMI input and give it a name and icon. HDMI numbering on this firmware
+  (22.4): HDMI1=23, HDMI2=24, HDMI3=25, AV=2. These are the values of the int extra `input` for the
+  activity `com.xiaomi.mitv.tvplayer/.ExternalSourceActivity`.
+- Aerial shows the weather on its home screen. It guesses the city from the IP address. If the city
+  is wrong, scan the QR code in the wallpaper menu with your phone and set it (for example
+  "Ulaanbaatar").
+- **Update:** download a new APK from the [GitHub releases](https://github.com/pengchujin/aerial-tv/releases)
+  and run `APK=<file> ./scripts/aerial-setup.sh`.
 
-## Буцаах
+## Undo
 
 ```sh
-./scripts/aerial-restore.sh               # HOME → PatchWall, Aerial суусан хэвээр үлдэнэ
-./scripts/aerial-restore.sh --uninstall   # Aerial-ийг бас устгана
+./scripts/aerial-restore.sh               # HOME → PatchWall, Aerial stays installed
+./scripts/aerial-restore.sh --uninstall   # also uninstall Aerial
 ```
 
-## Анхаарах
+## Notes
 
-- Aerial-д accessibility, system settings бичих зэрэг өргөн эрх өгсөн.
-- PatchWall-ийн хүүхдийн түгжээ (儿童锁) Aerial-ээс үл хамааран ажиллана. Home Guard түүнийг
-  алгасдаггүй нь зөв ажиллагаа юм.
-- Xiaomi-ийн screensaver (`com.mitv.screensaver`) хэвээр байгаа тул "天津 河西" (Тяньжин)-ий цаг
-  агаарыг харуулж магадгүй.
+- Aerial has broad permissions, such as accessibility and writing system settings.
+- PatchWall's child lock (儿童锁) works independently of Aerial. Home Guard doesn't bypass it, which
+  is the correct behavior.
+- Xiaomi's screensaver (`com.mitv.screensaver`) is still there, so it may show the weather for
+  "天津 河西" (Tianjin).

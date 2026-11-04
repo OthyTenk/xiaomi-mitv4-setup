@@ -3,7 +3,7 @@
 #   ./adb-connect.sh                 (TV=192.168.1.13 гэж үзнэ)
 #   TV=192.168.1.20 ./adb-connect.sh (IP өөрчлөгдсөн бол)
 # Урьдчилан: зурагт дээр Settings → Account & security → ADB debugging → Allow.
-# USB кабель бүү ашигла: зурагт асаж унтраад гацдаг (docs/02-adb.md).
+# USB кабель бүү ашигла: зурагт асаж унтраад гацдаг (docs/02-adb.mn.md).
 set -u
 TV="${TV:-192.168.1.13}"
 SERIAL="$TV:5555"

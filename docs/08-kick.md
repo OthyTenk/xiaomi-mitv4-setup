@@ -1,144 +1,148 @@
-# 8. Kick: өөрсдийн app
+# 8. Kick: our own app
 
-## Яагаад өөрсдөө хийсэн бэ
+**English** · [Монгол](08-kick.mn.md)
 
-2026-10-31-нд шалгасан бэлэн хувилбарууд:
+## Why build our own
 
-| App | Яагаад болохгүй |
+Existing options, checked on 2026-10-31:
+
+| App | Why it doesn't work |
 |---|---|
-| Kick-ийн албан ёсны Android TV app | **Android 8.0+** (API 26) шаарддаг (APKMirror-ийн мэдээлэл). Энэ зурагт Android 6 (API 23) |
-| Kick-ийн утасны app (`com.kick.mobile`) | Android 7+. Мөн remote-оор удирдахад тохиромжгүй |
-| SmartKickTV ([CxWatcher/SmartTVKick](https://github.com/CxWatcher/SmartTVKick)) | Android 7+ (minSdk 24). Эх код нь нийтлэгдээгүй, зөвхөн APK байдаг. Native library болон өөрийгөө шинэчлэх эрхтэй |
-| Kodi + Kick addon | Найдвартай addon олдсонгүй |
+| Kick's official Android TV app | Needs **Android 8.0+** (API 26), according to APKMirror. This TV has Android 6 (API 23) |
+| Kick's phone app (`com.kick.mobile`) | Android 7+. Also awkward to use with a remote |
+| SmartKickTV ([CxWatcher/SmartTVKick](https://github.com/CxWatcher/SmartTVKick)) | Android 7+ (minSdk 24). The source code isn't published, only the APK. It has native libraries and permission to update itself |
+| Kodi + a Kick addon | No reliable addon found |
 
-HTTPS-ийн хувьд асуудал байхгүй. Kick-ийн серверүүд энэ зурагтын хуучин root CA-уудтай таардаг тул
-"Цаг агаар"-тай адил root certificate багтаах шаардлагагүй:
+HTTPS is no problem. Kick's servers chain to roots this TV already has, so unlike the Weather app no
+root certificate needs to be bundled:
 
-- `kick.com`, `web.kick.com`, `stream.kick.com`: Google Trust Services → **GlobalSign Root CA** (cross-sign)
-- Видео (`*.live-video.net`, Amazon IVS), зураг (`images.kick.com`, `files.kick.com`):
+- `kick.com`, `web.kick.com`, `stream.kick.com`: Google Trust Services → **GlobalSign Root CA** (cross-signed)
+- Video (`*.live-video.net`, Amazon IVS) and images (`images.kick.com`, `files.kick.com`):
   Amazon → **Starfield Services Root G2**
 
-## Суулгасан хувилбар
+## Installed version
 
 | | |
 |---|---|
-| Package | `mn.home.kick`, хувилбар 1.0. Зурагт дээр **"Kick"** нэрээр харагдана |
-| APK | [`apks/kick-tv.apk`](../apks/kick-tv.apk), ≈2.2MB |
-| Код | [`kick-tv/`](../kick-tv/) |
-| Видео тоглуулагч | AndroidX Media3 (ExoPlayer) 1.11.1, HLS. Android 6 (API 23)-г дэмждэг |
+| Package | `mn.home.kick`, version 1.0. Appears on the TV as **"Kick"** |
+| APK | `apks/kick-tv.apk`, ≈2.2MB ([Releases](https://github.com/OthyTenk/xiaomi-mitv4-setup/releases)) |
+| Code | [`kick-tv/`](../kick-tv/) |
+| Video player | AndroidX Media3 (ExoPlayer) 1.11.1, HLS. Supports Android 6 (API 23) |
 
-## Дэлгэц
+## Screen
 
-Дээд талд 4 таб байна. Remote-ын сумаар таб дээр очиход тэр таб шууд нээгдэнэ.
+There are 4 tabs at the top. Moving onto a tab with the remote's arrows opens it right away. The
+interface is in Mongolian; the tab names are given in parentheses.
 
-| Таб | Юу харуулах вэ |
+| Tab | What it shows |
 |---|---|
-| **Дуртай** | Нэмсэн сувгууд. Шууд дамжуулж буй нь эхэнд (үзэгчдийн тоогоор), offline нь араас нь |
-| **Монгол** | Монгол хэл дээрх бүх шууд дамжуулалт (Kick-ийн `language=mn`), үзэгчдийн тоогоор |
-| **Бүх улс** | Дэлхийн хамгийн их үзэгчтэй 48 дамжуулалт |
-| **Хайх** | Сувгийн нэрээр хайна. Бичиж байхад өөрөө хайна, keyboard дээрх "Search/Done" дарахад илэрц рүү шилжинэ |
+| **Favorites** (Дуртай) | Channels you added. Live ones first (by viewer count), offline ones after them |
+| **Mongolian** (Монгол) | All live streams in Mongolian (Kick's `language=mn`), by viewer count |
+| **All countries** (Бүх улс) | The 48 most-watched streams worldwide |
+| **Search** (Хайх) | Search by channel name. It searches as you type; "Search/Done" on the keyboard jumps to the results |
 
-Карт бүр дээр зураг, LIVE тэмдэг, үзэгчдийн тоо, гарчиг, сувгийн нэр, тоглоомын ангилал харагдана.
-Дуртай сувгийн нэрний өмнө ★ тэмдэг гарна. Дуртай сувгууд энэ зурагт дээр л хадгалагдана
-(Kick account-д нэвтрэхгүй).
+Each card shows a thumbnail, a LIVE badge, the viewer count, the title, the channel name and the
+game category. Favorite channels have a ★ before their name. Favorites are stored only on this TV
+(there's no Kick account login).
 
-App асахад дуртай суваг байвал **Дуртай**, үгүй бол **Монгол** таб нээгдэнэ.
+When the app opens, it shows **Favorites** if you have any, otherwise **Mongolian**.
 
-### 18+ шүүлтүүр
+### 18+ filter
 
-Kick өөрөө 18+ (`is_mature`) гэж тэмдэглэсэн дамжуулалтыг **Монгол** болон **Бүх улс** табд
-харуулдаггүй. Зурагтад хүүхдийн түгжээ (儿童锁) асаалттай байгаа тул ингэж тохируулсан. Хайлт болон
-Дуртай табд эдгээр суваг харагдана. Шүүлтүүрийг унтраах бол
-`kick-tv/src/mn/home/kick/MainActivity.java` дотор `HIDE_MATURE = false` болгоод дахин build хийнэ.
+Streams that Kick itself marks 18+ (`is_mature`) are hidden in the **Mongolian** and **All
+countries** tabs. This was set up because the TV's child lock (儿童锁) is on. These channels still
+show in Search and Favorites. To turn the filter off, set `HIDE_MATURE = false` in
+`kick-tv/src/mn/home/kick/MainActivity.java` and rebuild.
 
-## Удирдлага
+## Controls
 
-**Жагсаалт:**
+**Lists:**
 
-| Товч | Үйлдэл |
+| Button | Action |
 |---|---|
-| Сумнууд | Карт, таб хооронд шилжинэ |
-| **OK** | Дамжуулалтыг үзэх |
-| **Menu (≡)** эсвэл **OK-г удаан дарах** | Дуртайд нэмэх / хасах |
-| Таб дээр **OK** | Жагсаалтыг шинэчлэх. Мөн таб руу буцаж ороход эсвэл тоглуулагчаас гарахад жагсаалт 1 минутаас хуучин бол өөрөө шинэчлэгдэнэ |
+| Arrows | Move between cards and tabs |
+| **OK** | Watch the stream |
+| **Menu (≡)** or **long-press OK** | Add to / remove from favorites |
+| **OK** on a tab | Reload the list. A list older than 1 minute also reloads when you return to its tab or leave the player |
 
-**Тоглуулагч:**
+**Player:**
 
-| Товч | Үйлдэл |
+| Button | Action |
 |---|---|
-| **◀ ▶** | Тухайн табын өмнөх / дараагийн шууд дамжуулалт |
-| **▲ ▼** | Чанар: автомат → 1080p → 720p → 480p → 360p → 160p |
-| **OK** | Мэдээллийн мөр (суваг, гарчиг, үзэгч, хэдэн цаг дамжуулж буй, чанар) |
-| **Menu (≡)** эсвэл **OK-г удаан дарах** | Дуртайд нэмэх / хасах |
-| **Back** | Жагсаалт руу буцах |
+| **◀ ▶** | Previous / next live stream in the current tab |
+| **▲ ▼** | Quality: auto → 1080p → 720p → 480p → 360p → 160p |
+| **OK** | Info bar (channel, title, viewers, how long it's been live, quality) |
+| **Menu (≡)** or **long-press OK** | Add to / remove from favorites |
+| **Back** | Back to the list |
 
-- Чанар анхнаасаа **автомат**. Энэ сүлжээнд ихэвчлэн 1080p60 хүртэл өсдөг.
-- Сүлжээ тасарвал 2, 5, 10, 30 секундийн дараа өөрөө дахин холбогдоно.
-- Дамжуулалт дууссан эсвэл суваг offline бол минут тутам шалгаж, эхлэхэд нь өөрөө тоглуулна.
-- Тоглуулж байхад дэлгэц болон Xiaomi-ийн screensaver асахгүй.
+- Quality starts at **auto**. On this network it usually climbs to 1080p60.
+- If the network drops, it reconnects by itself after 2, 5, 10 and 30 seconds.
+- If the stream ends or the channel is offline, it checks every minute and starts playing when the
+  stream comes back.
+- While playing, the screen and Xiaomi's screensaver don't turn on.
 
-**Байхгүй зүйлс:** чат, Kick account-д нэвтрэх ("Following" жагсаалт), бичлэг (VOD), клип.
+**Not included:** chat, Kick account login ("Following" list), recordings (VODs), clips.
 
-## Хэрхэн ажилладаг вэ
+## How it works
 
-- Kick-ийн вебийн API-г ашигладаг. Kick.com сайт өөрөө эдгээрийг дууддаг, нэвтрэх шаардлагагүй:
-  - `web.kick.com/api/v1/livestreams?language=mn&sort=viewer_count_desc`: жагсаалт
-  - `kick.com/api/v2/channels/<суваг>`: сувгийн мэдээлэл ба `playback_url`
-  - `kick.com/api/search?searched_word=<нэр>`: хайлт
+- It uses Kick's web API. The kick.com site calls the same endpoints, and they need no login:
+  - `web.kick.com/api/v1/livestreams?language=mn&sort=viewer_count_desc`: lists
+  - `kick.com/api/v2/channels/<channel>`: channel info and `playback_url`
+  - `kick.com/api/search?searched_word=<name>`: search
 
-  Албан ёсны public API (`api.kick.com`) OAuth token шаарддаг бөгөөд видеоны хаяг өгдөггүй тул
-  ашиглаагүй.
-- Видео нь Amazon IVS-ийн HLS (1080p60 ≈ 9 Mbps, 720p60, 480p, 360p, 160p). `playback_url`-ийн
-  token ≈10 минутын хугацаатай. Тиймээс тоглуулах болон дахин холбогдох бүрт шинээр авдаг.
-- Kick API-гаа өөрчилбөл жагсаалт ачаалагдахаа болино (жишээ нь `HTTP 403`, `JSONException`).
-  Тэгвэл `kick-tv/src/mn/home/kick/Kick.java`-г засна.
+  The official public API (`api.kick.com`) needs an OAuth token and doesn't return video URLs, so it
+  isn't used.
+- The video is Amazon IVS HLS (1080p60 ≈ 9 Mbps, 720p60, 480p, 360p, 160p). The token in
+  `playback_url` expires after ≈10 minutes, so a fresh one is fetched on every play and reconnect.
+- If Kick changes its API, the lists stop loading (for example `HTTP 403` or `JSONException`). Then
+  fix `kick-tv/src/mn/home/kick/Kick.java`.
 
-### Шалгалт (2026-10-31)
+### Tests (2026-10-31)
 
-- Зурагт дээр `app_process`-оор (UI-гүйгээр) app-ын `Kick.java`-г ажиллуулахад Монгол 33, дэлхийн
-  48 дамжуулалт ≈1 секундэд ачаалагдсан. 1080p60 видеоны 4.6MB segment ≈1 секундэд татагдсан.
-- Зурагтын Amlogic hardware decoder (`OMX.amlogic.avc.decoder.awesome`) 1920×1080 60fps-ийг
-  алдагдалгүй тоглуулсан (`/sys/class/vdec/vdec_status`: drop count 0).
-- Дэлгэцийн зураг (`scripts/screenshot.sh`) авахад видео хар харагдана. Энэ нь Amlogic-ийн видео
-  давхарга screenshot-д ордоггүйтэй холбоотой, хэвийн.
+- Running the app's `Kick.java` on the TV with `app_process` (no UI) loaded 33 Mongolian and 48
+  worldwide streams in ≈1 second. A 4.6MB segment of 1080p60 video downloaded in ≈1 second.
+- The TV's Amlogic hardware decoder (`OMX.amlogic.avc.decoder.awesome`) played 1920×1080 at 60fps
+  without dropping frames (`/sys/class/vdec/vdec_status`: drop count 0).
+- Screenshots (`scripts/screenshot.sh`) show the video as black. Amlogic's video layer isn't captured
+  in screenshots; that's normal.
 
-## Build хийж суулгах
+## Build and install
 
-JDK 17 болон Android SDK (build-tools, platform 35) хэрэгтэй. Gradle ашиглахгүй.
+You need JDK 17 and the Android SDK (build-tools, platform 35). Gradle isn't used.
 
 ```sh
 cd kick-tv
 ./build.sh              # → build/kick-tv.apk
-./build.sh install      # build хийгээд зурагт дээр суулгаж нээнэ (ADB асаалттай байх ёстой)
-python3 art.py          # icon, banner-ийг дахин зурна (Pillow хэрэгтэй)
+./build.sh install      # build, then install and open it on the TV (ADB must be on)
+python3 art.py          # redraw the icon and banner (needs Pillow)
 ```
 
-- Анх build хийхэд Media3 ба Guava-г Maven-аас `kick-tv/libs/`-д татаж, `build.sh` дахь SHA-256-аар
-  шалгана. Дараагийн build-үүд интернетгүй ажиллана.
-- Зурагт дээр суулгахад ≈2 минут болно. Android 6 app-ыг суулгах үедээ бүрэн compile хийдэг.
-- Шинэ хувилбар гаргахдаа `AndroidManifest.xml`-ийн `versionCode`-ийг нэмэгдүүлнэ. Шинэ build-ийг
-  `apks/kick-tv.apk` руу хуулж, `apks/SHA256SUMS.txt`-ийг шинэчилнэ.
-- Тодорхой сувгийг шууд нээх (шалгахад хэрэгтэй):
+- The first build downloads Media3 and Guava from Maven into `kick-tv/libs/` and checks them against
+  the SHA-256 values in `build.sh`. Later builds work offline.
+- Installing on the TV takes ≈2 minutes, because Android 6 fully compiles the app at install time.
+- For a new version, increase `versionCode` in `AndroidManifest.xml`. Copy the new build to
+  `apks/kick-tv.apk` and update `apks/SHA256SUMS.txt`.
+- Open a specific channel directly (useful for testing):
   `adb shell am start -n mn.home.kick/.PlayerActivity -e slug kesharp`
 
 ## ⚠️ Keystore
 
-`kick-tv/keystore.jks` болон `keystore.pass` нь app-ын signing key. Устгавал шинэ build хуучин app-ын
-дээр суухгүй. Тэгвэл `adb uninstall mn.home.kick` хийгээд шинээр суулгана (дуртай сувгууд арилна).
-Эдгээр файлыг git эсвэл олон нийтийн газар бүү байршуул.
+`kick-tv/keystore.jks` and `keystore.pass` are the app's signing key. If they're deleted, a new
+build won't install over the old app. Then run `adb uninstall mn.home.kick` and install it fresh
+(favorites are lost). Never put these files in git or anywhere public.
 
-## Кодын бүтэц
+## Code layout
 
-| Файл | Үүрэг |
+| File | Role |
 |---|---|
 | `AndroidManifest.xml` | Package, LAUNCHER + LEANBACK_LAUNCHER, banner, INTERNET |
-| `src/…/MainActivity.java` | Табууд, картууд, хайлт, дуртай, 18+ шүүлтүүр |
-| `src/…/PlayerActivity.java` | ExoPlayer, суваг солих, чанар, дахин холбогдох, мэдээллийн мөр |
-| `src/…/Kick.java` | Kick API (жагсаалт, суваг, хайлт), HTTP |
-| `src/…/Favorites.java` | Дуртай сувгууд (SharedPreferences) |
-| `src/…/Images.java` | Зураг татах, санах ойд хадгалах |
-| `res/layout/main.xml`, `card.xml`, `tab.xml`, `player.xml` | 960×540dp-д тааруулсан layout |
-| `res/drawable/*.xml` | Картын focus хүрээ, таб, badge, тоглуулагчийн сүүдэр |
-| `res/drawable-xhdpi/icon.png`, `banner.png` | `art.py`-ийн зурсан icon, TV banner |
-| `build.sh` | Сан татах → aapt2 → javac → d8 → zipalign → apksigner |
-| `libs/` | Media3 1.11.1, Guava 33.3.1 (build.sh татна) |
+| `src/…/MainActivity.java` | Tabs, cards, search, favorites, 18+ filter |
+| `src/…/PlayerActivity.java` | ExoPlayer, switching channels, quality, reconnecting, info bar |
+| `src/…/Kick.java` | Kick API (lists, channel, search), HTTP |
+| `src/…/Favorites.java` | Favorite channels (SharedPreferences) |
+| `src/…/Images.java` | Image download and memory cache |
+| `res/layout/main.xml`, `card.xml`, `tab.xml`, `player.xml` | Layouts tuned for 960×540dp |
+| `res/drawable/*.xml` | Card focus frame, tabs, badges, player shadow |
+| `res/drawable-xhdpi/icon.png`, `banner.png` | Icon and TV banner drawn by `art.py` |
+| `build.sh` | Download libraries → aapt2 → javac → d8 → zipalign → apksigner |
+| `libs/` | Media3 1.11.1, Guava 33.3.1 (downloaded by build.sh) |
